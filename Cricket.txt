@@ -1,204 +1,176 @@
-#include<stdio.h>
-#include<string.h>
- 
-int No_players;
-
-struct Cricket
+#include <stdio.h>
+#include <string.h>
+struct data
 {
-  int wickets,age,ODI,T20i;
-  char country[20],name[25];
-  float Batting_Avg;
-  int category;
-}players[1000];
+    char name[20];
+    int age;
+    char country[20];
+    int category, odi, t_20, wicket,runs;
+    float av_score;
+} d[10];
 
-// Batsmen by country
-void BatsmanByCountry(){
-    int j=0,count=0;;
-    char Country[20];
-    printf("\n Enter the name of the country whose batsman you wish to display : ");
-    scanf("%s",Country);
-    printf("\n\n Batsmen from Entered Country are ---->");
-    while(j<No_players){
-       if(strcmp(players[j].country,Country)==0){
-            if(players[j].category==1){
-                printf("\n %d) %s",count+1,players[j].name);
+void batsman_country(int a)
+{
+    char nation[20];
+    printf("Enter the country name :\n");
+    scanf("%s", nation);
+    printf("The batsman from %s country are as follows :\n ", nation);
+    int count = 0;
+    for (int i = 0; i < a; i++)
+    {
+
+        if (strcmp(d[i].country, nation) == 0)
+        {
+            if (d[i].category == 1||d[i].category==3)
+            {
+                printf(" \n %d) %s \n", count + 1, d[i].name);
+                count++;
             }
-       }
-       j++;
+        }
     }
 }
-
-// Bowler by Country
-void BowlerByCountry(){
-        int k=0,count=0;;
-    char Country[20];
-    printf("\n Enter the name of the country whose Bowlers you wish to display : ");
-    scanf("%s",Country);
-    printf("\n\n Bolwers from Entered Country are ---->");
-    while(k<No_players){
-       if(strcmp(players[k].country,Country)==0){
-            if(players[k].category==2){
-                printf("\n %d) %s",count+1,players[k].name);
+void average(int a)
+{
+    struct data swap;  
+    int count = 0;
+    printf("\n******** Sorted Average Score *********\n");
+   
+    printf("Player name   Average Score \n");
+    for (int i = 0; i < a-1; i++)
+    {
+        for (int j = 0; j < a-1-i; j++)
+        {
+            if(d[j].av_score<d[j+1].av_score)
+            {
+                swap=d[j];
+                d[j]=d[j+1];
+                d[j+1]=swap;
             }
-       }
-       k++;
+        }
+    }
+    for (int i = 0; i < a; i++)
+    {
+        printf("%s \t %f\n",d[i].name,d[i].av_score);
+    }
+    
+}
+void highest(int a)
+{
+    printf("\n************* Highest Average Score **************\n");
+    float max = d[0].av_score;
+    int j = 0;
+    for (int i = 0; i < a; i++)
+    {
+        if (d[i].av_score > max)
+        {
+            max = d[i].av_score;
+            j = i;
+        }
+    }
+    printf("The highest Average score is %.2f of player %s \n", max, d[j].name);
+}
+void bowler_country(int a)
+{
+    char nation[20];
+    int count;
+    printf("Enter the country of bowler\n");
+    scanf("%s", nation);
+    for (int i = 0; i < a; i++)
+    {
+        if (strcmp(d[i].country, nation) == 0)
+        {
+            if (d[i].category == 2||d[i].category==3)
+            {
+                printf("%d) %s\n", count + 1, d[i].name);
+                count++;
+            }
+        }
     }
 }
-
-// Player with Highest batting avg
-void HighestAverage(){
-    float max;
-    int h=1;
-    max=players[0].Batting_Avg;
-    while(h<No_players){
-        if(players[h].Batting_Avg>max){
-            max = players[h].Batting_Avg;
+void max_wicket(int a)
+{
+    printf("\n************* Highest Wicket Taker **************\n");
+    int max = d[0].wicket;
+    int j = 0;
+    for (int i = 0; i < a; i++)
+    {
+        if (d[i].wicket > max)
+        {
+            max = d[i].wicket;
+            j = i;
         }
-    h++;
     }
-  int count=1;
-    printf("\n The Batsman with Highest Batting Average is ");
-    for(int i=0 ; i<No_players;i++){
-        if(players[i].Batting_Avg==max){
-            printf("\n %d) %s",count,players[i].name);
-        } 
+    printf("The highest Wicket taker is %d of player %s \n", max, d[j].name);
+}
+void display(int a)
+{
+    printf("\n************Display the data************** \n");
+    printf("Name \t country \t Age  ODI played  T-20 Played  Caterogy \n ");
+    for (int i = 0; i < a; i++)
+    {
+        
+        printf("%s\t%s\t %d \t %d \t %d \t %d \n", d[i].name, d[i].country, d[i].age, d[i].odi, d[i].t_20, d[i].category);
     }
 }
-
-// Finding player with most wickets
-void MostWickets(){
-    int l=1,max = players[0].wickets;
-    while(l<No_players){
-        if(players[l].wickets>max){
-         max = players[l].wickets;
-        }
-       l++; 
+int main()
+{
+    int num, option;
+    printf("Enter the total no. of players \n");
+    scanf("%d", &num);
+    printf("Please Fill the data of players \n");
+    for (int i = 0; i < num; i++)
+    {
+        printf("Enter the Name of Player no %d:\n", i + 1);
+        scanf("%s", d[i].name);
+        printf("Enter the age of Player :\n");
+        scanf("%d", &d[i].age);
+        printf("Enter the country of Player :\n");
+        scanf("%s", d[i].country);
+        printf("Enter the category of Player (1.Batsman 2.Bowler 3.All Rounder:\n");
+        scanf("%d", &d[i].category);
+        printf("Enter the ODI matches played by this player :\n");
+        scanf("%d", &d[i].odi);
+        printf("Enter the T-20 matches played by this player :\n");
+        scanf("%d", &d[i].t_20);
+        printf("Enter the Average Score of player :\n");
+        scanf("%f", &d[i].av_score);
+        printf("Enter count of wicket taken by the of player :\n");
+        scanf("%d", &d[i].wicket);
+        printf("Enter the runs of player\n");
+        scanf("%d",&d[i].runs);
     }
+    while (1)
+    {
+    printf("\nEnter the correct choice.\n 1. Number of batsman of a particular country.\n 2. Average batting score.\n 3. Highest Average score. \n 4. Number of bowlers of a particular country. \n 5. MAx. no of wicket taken by bowler. \n 6. Display board. \n 7. Exit\n");
+    scanf("%d", &option);
 
-       printf("\n Bowler with most wickets are : ");
-   int count=1;
-    for(int j=0 ; j<No_players ; j++){
-        if(players[j].wickets!=max){
-            continue;
-        }
-        printf("\n %d) %s",count,players[j].name);
-    }
-}
-
-// Display Info of particular player
-void PlayerInfo(){
-    int index;
-    char Player[25];
-    printf("\n Enter the Name of the player whose information you want to display :");
-    scanf("%s",Player);
- 
-    for(int a=0 ; a<No_players ;a++){
-        if(strcmp(players[a].name,Player)==0){
-            index = a;
+        switch (option)
+        {
+        case 1:
+            batsman_country(num);
+            break;
+        case 2:
+            average(num);
+            break;
+        case 3:
+            highest(num);
+            break;
+        case 4:
+            bowler_country(num);
+            break;
+        case 5:
+            max_wicket(num);
+            break;
+        case 6:
+            display(num);
+            break;
+        case 7:
+            goto end;
+        default:
+            printf("Enter valid option\n");
             break;
         }
     }
-
-    printf("\n Information for %s --->",Player);
-    printf("\n Country : %s",players[index].country);
-    printf("\n Age : %d",players[index].age);
-    if(players[index].category==1){
-        printf("\n Category : Batsman");
-    }
-    else if(players[index].category==2){
-       printf("\n Category : Bowler"); 
-    }
-    else if(players[index].category==3){
-       printf("\n Category : Wicket Keeper"); 
-    }
-    else if(players[index].category==4){
-       printf("\n Category : All-Rounder"); 
-    }
-    printf("\n Batting average : %.3f",players[index].Batting_Avg);
-    printf("\n Number of ODIs played : %d",players[index].ODI);
-    printf("\n Number of T20Is played : %d",players[index].T20i);
-    printf("\n Number of wickets : %d",players[index].wickets);
-   
-}
-
-// Main
-int main(){
-    int choice;
-    printf("\n Enter the number of Players whose information you want to display :");
-    scanf("%d",&No_players);
-    
-    for(int i=0 ; i<No_players ; i++){
-        printf("\n\n Details for player %d",i+1);
-        printf("\n Enter the Name of the player : ");
-        scanf("%s",players[i].name);
-
-        printf("\n Enter the Country of the player : ");
-        scanf("%s",players[i].country);
-
-        printf("\n Enter the age of the player : ");
-        scanf("%d",&players[i].age);
-
-        printf("\n Enter the category of the player ---->");
-        printf("\n 1) Batsman \t 2) Bowler \n 3) Wicket Keeper \t 4) All Rounder");
-        printf("\n Players category is (Enter number corresponding to your option) : ");
-        a:
-        scanf("%d",&players[i].category);
-        if(players[i].category>4 || players[i].category<0){
-               printf("\n Enter valid number (1 to 4) : ");
-               goto a;
-        }
-
-        printf("\n Enter the number of ODIs played : ");
-        scanf("%d",&players[i].ODI);
-
-        printf("\n Enter the number of T20Is played : ");
-        scanf("%d",&players[i].T20i);
- 
-        printf("\n Enter the batting average of the player : ");
-        scanf("%f",&players[i].Batting_Avg);
-
-        printf("\n Enter number of wickets taken :");
-       scanf("%d",&players[i].wickets);
-    }
-
-printf("\nEnter 1: to know the number of batsman of a particular country");
-printf("\nEnter 2: to know number of bowlers of a particular country ");
-printf("\nEnter 3: to know batsman with higest average score");
-printf("\nEnter 4: to know bowler with maximum number of wickets");
-printf("\nEnter 5: to know the the information of particular player");
-again:
-printf("\n\n Your choice : ");
-invalid:
-scanf("%d",&choice);
-switch (choice)
-{
-case 1 : BatsmanByCountry();
-         break;
- 
-case 3 : HighestAverage();
-         break;
-
-case 2 : BowlerByCountry();
-         break;
-
-case 4 : MostWickets();
-         break;
-
-case 5 : PlayerInfo();
-         break;
-
-default: printf("\n Invalid choice! \nPlease re-enter your choice : ");
-         goto invalid;
-    break;
-}
-
-int repeat;
-printf("\n\n\n Do you want to perform operation again? ");
-printf(" \n Enter 0 : No \n Enter 1 : Yes \n Want to Continue? : ");
-
-scanf("%d",&repeat);
-if(repeat == 1 ){
-    goto again;
-}
-    return 0;
+end:
+return 0;
 }
